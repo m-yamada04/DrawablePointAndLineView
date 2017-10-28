@@ -1,0 +1,11 @@
+framework module DrawablePointAndLineView {
+  umbrella header "DrawablePointAndLineView.h"
+
+  export *
+  module * { export * }
+}
+
+module DrawablePointAndLineView.Swift {
+    header "DrawablePointAndLineView-Swift.h"
+    requires objc
+}
