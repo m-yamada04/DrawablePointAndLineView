@@ -50,7 +50,7 @@ open class DrawablePointAndLineView: UIView {
     fileprivate var drawingLine: CALayer?
     
     /// 移動中のレイヤー
-    fileprivate var movingLayer: DrawnLayerInfo?
+    open var movingLayer: DrawnLayerInfo?
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -210,6 +210,16 @@ open class DrawablePointAndLineView: UIView {
             }
         }
         return nil
+    }
+    
+    open func searchMovePoint(location: CGPoint, allowDiff: CGFloat = 10) -> DrawnPoint? {
+        if let moving = self.movingLayer as? DrawnPoint {
+            return moving
+        } else if let nearPoint = self.searchNearPoint(location: location, allowDiff: allowDiff) as? DrawnPoint {
+            return nearPoint
+        } else {
+            return nil
+        }
     }
 
     // TODO
