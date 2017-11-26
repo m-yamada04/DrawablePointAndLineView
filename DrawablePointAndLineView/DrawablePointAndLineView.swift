@@ -35,7 +35,10 @@ open class DrawablePointAndLineView: UIView {
     open var lineAlpha: CGFloat = 1.0
     
     /// 描画済みの点・線一覧
-    fileprivate var drawnList = [DrawnLayerInfo]()
+    open var drawnList = [DrawnLayerInfo]()
+    
+    /// 移動中のレイヤー
+    open var movingLayer: DrawnLayerInfo?
     
     /// delegate
     fileprivate var delegate: DrawablePointAndLineViewDelegate?
@@ -48,9 +51,6 @@ open class DrawablePointAndLineView: UIView {
     
     /// 描画中の線レイヤー
     fileprivate var drawingLine: CALayer?
-    
-    /// 移動中のレイヤー
-    open var movingLayer: DrawnLayerInfo?
     
     override init(frame: CGRect) {
         super.init(frame: frame)
