@@ -26,7 +26,7 @@ public struct DrawnPoint: DrawnLayerInfo {
     var pointSize: CGFloat
     var pointColor: UIColor
     var pointAlpha: CGFloat
-    var pointLocation: CGPoint
+    public var pointLocation: CGPoint
     public var layer: CALayer
     
     mutating public func editWidth(width: CGFloat) {
