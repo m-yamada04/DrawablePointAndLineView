@@ -9,7 +9,7 @@
 Pod::Spec.new do |s|
 
   s.name         = "DrawablePointAndLineView"
-  s.version      = "0.0.4"
+  s.version      = "0.0.5"
   s.summary      = "Drawable point and line while swiching the drawing mode."
 
   s.homepage     = "https://github.com/m-yamada04/DrawablePointAndLineView"
