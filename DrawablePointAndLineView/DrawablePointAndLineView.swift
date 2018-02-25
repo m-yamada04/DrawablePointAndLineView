@@ -40,6 +40,9 @@ open class DrawablePointAndLineView: UIView {
     /// 移動中のレイヤー
     open var movingLayer: DrawnLayerInfo?
     
+    /// 描画中の線レイヤー
+    open var drawingLine: CALayer?
+    
     /// delegate
     fileprivate var delegate: DrawablePointAndLineViewDelegate?
     
@@ -48,9 +51,6 @@ open class DrawablePointAndLineView: UIView {
     
     /// シングルタップイベントの遅延発動用タイマー
     fileprivate var singleTapEventTimer: Timer?
-    
-    /// 描画中の線レイヤー
-    fileprivate var drawingLine: CALayer?
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -145,10 +145,12 @@ open class DrawablePointAndLineView: UIView {
         layer.path = UIBezierPath(roundedRect: CGRect(x: 0, y: 0, width: self.pointSize, height: self.pointSize), cornerRadius: 20).cgPath
         self.layer.addSublayer(layer)
         
+        // 保持する座標は描画したレイヤーの中央の座標とする
+        let pointLocation = CGPoint(x: location.x + (self.pointSize * 0.5), y: location.y + (self.pointSize * 0.5))
         let drawPoint = DrawnPoint(
             id: NSUUID().uuidString,
             pointSize: self.pointSize, pointColor: self.pointColor, pointAlpha: self.pointAlpha,
-            pointLocation: location, layer: layer
+            pointLocation: pointLocation, layer: layer
         )
         self.drawnList.append(drawPoint)
         delegate?.layerDidDrawn(layerInfo: drawPoint)
@@ -183,6 +185,18 @@ open class DrawablePointAndLineView: UIView {
         } else {
             return nil
         }
+    }
+    
+    open func searchLayerById(id: String) -> DrawnLayerInfo? {
+        if self.drawnList.count < 1 {
+            return nil
+        }
+        for drawn in self.drawnList {
+            if drawn.id == id {
+                return drawn
+            }
+        }
+        return nil
     }
     
     open func searchNearPoint(location: CGPoint, allowDiff: CGFloat = 10) -> DrawnLayerInfo? {
