@@ -23,9 +23,9 @@ public protocol DrawnLayerInfo {
 /// 描画済みの点情報
 public struct DrawnPoint: DrawnLayerInfo {
     public var id: String
-    var pointSize: CGFloat
-    var pointColor: UIColor
-    var pointAlpha: CGFloat
+    public var pointSize: CGFloat
+    public var pointColor: UIColor
+    public var pointAlpha: CGFloat
     public var pointLocation: CGPoint
     public var layer: CALayer
     
@@ -54,10 +54,10 @@ public struct DrawnPoint: DrawnLayerInfo {
 public struct DrawnLine: DrawnLayerInfo {
 
     public var id: String
-    var lineWidth: CGFloat
-    var lineColor: UIColor
-    var lineAlpha: CGFloat
-    var lineLocation: (CGPoint, CGPoint)
+    public var lineWidth: CGFloat
+    public var lineColor: UIColor
+    public var lineAlpha: CGFloat
+    public var lineLocation: (CGPoint, CGPoint)
     public var layer: CALayer
     
     mutating public func editWidth(width: CGFloat) {
