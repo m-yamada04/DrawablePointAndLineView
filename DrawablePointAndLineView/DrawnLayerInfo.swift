@@ -10,14 +10,6 @@
 public protocol DrawnLayerInfo {
     var id: String { get }
     var layer: CALayer { get }
-    
-    mutating func editWidth(width: CGFloat)
-    
-    mutating func editColor(color: UIColor)
-    
-    mutating func editAlpha(alpha: CGFloat)
-    
-    mutating func replaceLayer(layer: CALayer)
 }
 
 /// 描画済みの点情報
@@ -28,26 +20,6 @@ public struct DrawnPoint: DrawnLayerInfo {
     public var pointAlpha: CGFloat
     public var pointLocation: CGPoint
     public var layer: CALayer
-    
-    mutating public func editWidth(width: CGFloat) {
-        self.pointSize = width
-    }
-    
-    mutating public func editColor(color: UIColor) {
-        self.pointColor = color
-    }
-    
-    mutating public func editAlpha(alpha: CGFloat) {
-        self.pointAlpha = alpha
-    }
-    
-    mutating func editPointLocation(location: CGPoint) {
-        self.pointLocation = location
-    }
-    
-    mutating public func replaceLayer(layer: CALayer) {
-        self.layer = layer
-    }
 }
 
 /// 描画済みの線情報
@@ -59,20 +31,16 @@ public struct DrawnLine: DrawnLayerInfo {
     public var lineAlpha: CGFloat
     public var lineLocation: (CGPoint, CGPoint)
     public var layer: CALayer
-    
-    mutating public func editWidth(width: CGFloat) {
-        self.lineWidth = width
-    }
-    
-    mutating public func editColor(color: UIColor) {
-        self.lineColor = color
-    }
-    
-    mutating public func editAlpha(alpha: CGFloat) {
-        self.lineAlpha = alpha
-    }
-    
-    mutating public func replaceLayer(layer: CALayer) {
-        self.layer = layer
-    }
 }
+
+/// 描画済みの点に基づいて引かれた線情報
+public struct DrawnLineBasedOnPoints: DrawnLayerInfo {
+    public var id: String
+    public var lineWidth: CGFloat
+    public var lineColor: UIColor
+    public var lineAlpha: CGFloat
+    public var basedPointIds: [String]
+    public var layer: CALayer
+}
+
+///
