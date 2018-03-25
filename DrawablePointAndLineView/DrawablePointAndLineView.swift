@@ -162,21 +162,49 @@ open class DrawablePointAndLineView: UIView {
             drawingLine.removeFromSuperlayer()
             self.drawingLine = nil
         }
-        let layer = CAShapeLayer()
-        layer.fillColor = UIColor.clear.cgColor
-        layer.strokeColor = self.lineColor.cgColor
-        let line = UIBezierPath()
-        line.move(to: began)
-        line.addLine(to: end)
-        line.close()
-        line.lineWidth = self.lineWidth
-        layer.path = line.cgPath
-        self.layer.addSublayer(layer)
+        let layer = self.drawLineLayer(began: began, end: end)
         self.drawingLine = layer
         
         if save {
             self.saveLine(end: end, line: layer)
         }
+    }
+    
+    open func drawLineBasedPoints(beganPoint: DrawnPoint, endPoint: DrawnPoint) {
+        if self.searchLayerById(id: beganPoint.id) == nil || self.searchLayerById(id: endPoint.id) == nil {
+            // 引数の点情報がいずれか存在しない場合は何もしない
+            assertionFailure("drawLineBasedPoints: not exists any DrawnPoint")
+            return
+        } else {
+            // 全く同じ点に対して既に線を描画済みの場合も何もしない
+            let drawns = self.drawnList.filter { $0 is DrawnLineBasedOnPoints } as! [DrawnLineBasedOnPoints]
+            if drawns.count != 0 {
+                for drawn in drawns {
+                    if drawn.basedPointIds.contains(beganPoint.id) && drawn.basedPointIds.contains(endPoint.id) {
+                        return
+                    }
+                }
+            }
+        }
+        let layer = self.drawLineLayer(began: beganPoint.pointLocation, end: endPoint.pointLocation)
+        
+        let drawnLayer = DrawnLineBasedOnPoints(
+            id: NSUUID().uuidString,
+            lineWidth: self.lineWidth,
+            lineColor: self.lineColor,
+            lineAlpha: self.lineAlpha,
+            basedPointIds: [beganPoint.id, endPoint.id],
+            layer: layer
+        )
+        self.drawnList.append(drawnLayer)
+    }
+    
+    open func getDrawnPoints() -> [DrawnLayerInfo]? {
+        return self.drawnList.filter { $0 is DrawnPoint }
+    }
+    
+    open func getDrawnLines()  -> [DrawnLayerInfo]? {
+        return self.drawnList.filter { $0 is DrawnLine || $0 is DrawnLineBasedOnPoints }
     }
     
     open func getDrawnAt(index: Int) -> DrawnLayerInfo? {
@@ -296,6 +324,20 @@ open class DrawablePointAndLineView: UIView {
 
     
 // MARK: fileprivate
+    
+    fileprivate func  drawLineLayer(began: CGPoint, end: CGPoint) -> CALayer {
+        let layer = CAShapeLayer()
+        layer.fillColor = UIColor.clear.cgColor
+        layer.strokeColor = self.lineColor.cgColor
+        let line = UIBezierPath()
+        line.move(to: began)
+        line.addLine(to: end)
+        line.close()
+        line.lineWidth = self.lineWidth
+        layer.path = line.cgPath
+        self.layer.addSublayer(layer)
+        return layer
+    }
     
     fileprivate func saveLine(began: CGPoint? = nil, end: CGPoint, line: CALayer) {
         let drawLine = DrawnLine(
